@@ -10,6 +10,8 @@
 	<dimen name="text_currency_code">30sp</dimen>
 	<dimen name="text_currency_value">30sp</dimen>
 	<dimen name="text_drop_down_arrow">20sp</dimen>
+	<dimen name="dimen_2">2dp</dimen>
+	<dimen name="dimen_3">3dp</dimen>
 	<dimen name="dimen_5">5dp</dimen>
 	<dimen name="dimen_10">10dp</dimen>
 	<dimen name="dimen_15">15dp</dimen>
