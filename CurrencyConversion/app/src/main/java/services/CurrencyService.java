@@ -11,6 +11,7 @@ import modals.Exchange;
 
 public interface CurrencyService {
 
+
 	public List<Currency> getAllCurrencies();
 
 	public Exchange getExchangeRate(Currency base, Currency target);
