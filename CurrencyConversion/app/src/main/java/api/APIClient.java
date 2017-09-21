@@ -6,8 +6,6 @@ import modals.Currency;
 import modals.Exchange;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.http.GET;
-import retrofit.http.Query;
 
 /**
  * Created by SKY on 9/21/2017.
@@ -30,12 +28,12 @@ public class APIClient implements RequestInterceptor {
 		return instance;
 	}
 
-	private APIClient.APIMethods getApi() {
+	private APIMethods getApi() {
 		if (api == null) {
 			RestAdapter restAdapter = new RestAdapter.Builder().setRequestInterceptor(this)
 					.setEndpoint(APIClient.BASE_URL).setLogLevel(RestAdapter.LogLevel.FULL).build();
 
-			api = restAdapter.create(APIClient.APIMethods.class);
+			api = restAdapter.create(APIMethods.class);
 		}
 		return api;
 	}
@@ -56,17 +54,6 @@ public class APIClient implements RequestInterceptor {
 
 		Exchange result = getApi().getExchangeResponse(baseCode, targetCode);
 		return result;
-	}
-
-	private interface APIMethods {
-
-		@GET("/api/currency")
-		List<Currency> getCurrencies();
-
-		@GET("/api/exchange")
-		Exchange getExchangeResponse(@Query("baseCode") String baseCode,
-				@Query("targetCode") String targetCode);
-
 	}
 
 }
