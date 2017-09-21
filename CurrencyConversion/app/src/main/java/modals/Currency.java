@@ -60,4 +60,39 @@ public class Currency {
 		this.rate = rate;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof Currency))
+			return false;
+
+		Currency currency = (Currency) o;
+
+		if (Double.compare(currency.rate, rate) != 0)
+			return false;
+		if (code != null ? !code.equals(currency.code) : currency.code != null)
+			return false;
+		if (country != null ? !country.equals(currency.country) : currency.country != null)
+			return false;
+		if (name != null ? !name.equals(currency.name) : currency.name != null)
+			return false;
+		if (flagPath != null ? !flagPath.equals(currency.flagPath) : currency.flagPath != null)
+			return false;
+		return true;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = code != null ? code.hashCode() : 0;
+		result = 31 * result + (country != null ? country.hashCode() : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (flagPath != null ? flagPath.hashCode() : 0);
+		temp = Double.doubleToLongBits(rate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 }

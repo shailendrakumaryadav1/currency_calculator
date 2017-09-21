@@ -39,4 +39,33 @@ public class Exchange {
 	public void setRate(double rate) {
 		this.rate = rate;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof Exchange))
+			return false;
+
+		Exchange exchange = (Exchange) o;
+
+		if (Double.compare(exchange.rate, rate) != 0)
+			return false;
+		if (baseCode != null ? !baseCode.equals(exchange.baseCode) : exchange.baseCode != null)
+			return false;
+		return targetCode != null ? targetCode.equals(exchange.targetCode) :
+				exchange.targetCode == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = baseCode != null ? baseCode.hashCode() : 0;
+		result = 31 * result + (targetCode != null ? targetCode.hashCode() : 0);
+		temp = Double.doubleToLongBits(rate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 }
