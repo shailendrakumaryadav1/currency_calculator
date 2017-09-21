@@ -44,16 +44,14 @@ public class APIClient implements RequestInterceptor {
 	}
 
 	public List<Currency> getCurrencies() {
-		List<Currency> result = getApi().getCurrencies();
-		return result;
+		return getApi().getCurrencies();
 	}
 
 	public Exchange getExchange(Currency base, Currency target) {
 		String baseCode = base.getCode();
 		String targetCode = target.getCode();
 
-		Exchange result = getApi().getExchangeResponse(baseCode, targetCode);
-		return result;
+		return getApi().getExchangeResponse(baseCode, targetCode);
 	}
 
 }
