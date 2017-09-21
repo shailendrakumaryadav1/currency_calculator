@@ -11,13 +11,25 @@ import modals.Exchange;
 
 public class CurrencyServiceImpl implements CurrencyService {
 
-	public List<Currency> getAllCurrencies()
+	private static CurrencyService currencyService = null;
+
+	private CurrencyServiceImpl()
 	{
+	}
+
+	public static CurrencyService getCurrencyService()
+	{
+		if(currencyService != null)
+			return currencyService;
+		currencyService = new CurrencyServiceImpl();
+		return currencyService;
+	}
+
+	public List<Currency> getAllCurrencies() {
 		return null;
 	}
 
-	public Exchange getExchangeRate(Currency base, Currency target)
-	{
+	public Exchange getExchangeRate(Currency base, Currency target) {
 		return null;
 	}
 
