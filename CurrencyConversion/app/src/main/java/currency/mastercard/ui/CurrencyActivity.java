@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ public class CurrencyActivity extends AppCompatActivity {
 
 	private static final int UNIT = 1;
 	private static final double DEFAULT_VALUE = 1000.0;
+	private static final double DEFAULT_VALUE_HINT = 1000.0;
 
 	@Bind(R.id.base_currency_card)
 	CardView baseCurrencyCard;
@@ -78,6 +81,8 @@ public class CurrencyActivity extends AppCompatActivity {
 	private State state;
 	private Double sourceValue;
 	private Double targetValue;
+	private TextWatcher sourceCurrencyValueWatcher;
+	private TextWatcher targetCurrencyValueWatcher;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +90,13 @@ public class CurrencyActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_currency);
 		ButterKnife.bind(this);
 
-		initValues();
+		init();
 
 		createView();
 
 	}
 
-	public void initValues() {
+	public void init() {
 		source = null;
 		target = null;
 		exchange = null;
@@ -108,7 +113,7 @@ public class CurrencyActivity extends AppCompatActivity {
 		runner.execute();
 	}
 
-	public void displayCurrencyCard(boolean isVisible) {
+	public void displayCurrencyCards(boolean isVisible) {
 		if (isVisible) {
 			baseCurrencyCard.setVisibility(View.VISIBLE);
 			targetCurrencyCard.setVisibility(View.VISIBLE);
@@ -178,7 +183,6 @@ public class CurrencyActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			// execution of result of Long time consuming operation
 
 			switch (state) {
 				case SUCCESS:
@@ -222,7 +226,7 @@ public class CurrencyActivity extends AppCompatActivity {
 		defaultCurrencyCardImage.setImageResource(R.mipmap.ic_no_internet);
 		defaultCurrencyCardText.setText(R.string.text_no_connection);
 		defaultCurrencyCardImage.setVisibility(View.VISIBLE);
-		displayCurrencyCard(false);
+		displayCurrencyCards(false);
 	}
 
 	public void fillErrorView() {
@@ -230,13 +234,14 @@ public class CurrencyActivity extends AppCompatActivity {
 		defaultCurrencyCardImage.setImageResource(R.mipmap.ic_error);
 		defaultCurrencyCardText.setText(R.string.text_something_went_wrong);
 		defaultCurrencyCardImage.setVisibility(View.VISIBLE);
-		displayCurrencyCard(false);
+		displayCurrencyCards(false);
 	}
 
 	public void fillCurrencyView() {
 		fillSourceCard();
 		fillTargetCard();
-		displayCurrencyCard(true);
+		applyCurrencyValueChangeListener();
+		displayCurrencyCards(true);
 
 	}
 
@@ -244,7 +249,7 @@ public class CurrencyActivity extends AppCompatActivity {
 		defaultCurrencyCardProgress.setVisibility(View.VISIBLE);
 		defaultCurrencyCardText.setText(R.string.text_loading);
 		defaultCurrencyCardImage.setVisibility(View.GONE);
-		displayCurrencyCard(false);
+		displayCurrencyCards(false);
 	}
 
 	public void fillSourceCard() {
@@ -257,7 +262,9 @@ public class CurrencyActivity extends AppCompatActivity {
 
 		sourceCurrencyValue
 				.setText(String.format(getString(R.string.text_currency_format), sourceValue));
-		
+		sourceCurrencyValue.setHint(
+				String.format(getString(R.string.text_currency_format), DEFAULT_VALUE_HINT));
+
 	}
 
 	public void fillTargetCard() {
@@ -271,6 +278,11 @@ public class CurrencyActivity extends AppCompatActivity {
 		targetCurrencyValue
 				.setText(String.format(getString(R.string.text_currency_format), targetValue));
 
+		targetValue = exchange.getValue(sourceValue);
+
+		targetCurrencyValue.setHint(String.format(getString(R.string.text_currency_format),
+				exchange.getValue(DEFAULT_VALUE_HINT)));
+
 	}
 
 	public void fillFlag(Currency currency, ImageView imageView) {
@@ -283,6 +295,67 @@ public class CurrencyActivity extends AppCompatActivity {
 				.load(CurrencyServiceImpl.getCurrencyService().getCurrencyFlagUrl(currency))
 				.error(R.mipmap.ic_error).fit().transform(transformation).into(imageView);
 
+	}
+
+	public void applyCurrencyValueChangeListener() {
+		sourceCurrencyValueWatcher = new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				targetCurrencyValue.removeTextChangedListener(targetCurrencyValueWatcher);
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int a, int b, int c) {
+
+				if (sourceCurrencyValue.getText().toString().length() == 0) {
+					sourceValue = null;
+					targetValue = null;
+					targetCurrencyValue.setText("");
+
+				} else {
+					sourceValue = Double.parseDouble(sourceCurrencyValue.getText().toString());
+					targetValue = exchange.getValue(sourceValue);
+					targetCurrencyValue.setText(
+							String.format(getString(R.string.text_currency_format), targetValue));
+				}
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				targetCurrencyValue.addTextChangedListener(targetCurrencyValueWatcher);
+			}
+		};
+
+		targetCurrencyValueWatcher = new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				sourceCurrencyValue.removeTextChangedListener(sourceCurrencyValueWatcher);
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int a, int b, int c) {
+				if (targetCurrencyValue.getText().toString().length() == 0) {
+					targetValue = null;
+					sourceValue = null;
+					sourceCurrencyValue.setText("");
+
+				} else {
+					targetValue = Double.parseDouble(targetCurrencyValue.getText().toString());
+					sourceValue = reverseExchange.getValue(targetValue);
+					sourceCurrencyValue.setText(
+							String.format(getString(R.string.text_currency_format), sourceValue));
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				sourceCurrencyValue.addTextChangedListener(sourceCurrencyValueWatcher);
+			}
+		};
+
+		sourceCurrencyValue.addTextChangedListener(sourceCurrencyValueWatcher);
+		targetCurrencyValue.addTextChangedListener(targetCurrencyValueWatcher);
 	}
 
 }
