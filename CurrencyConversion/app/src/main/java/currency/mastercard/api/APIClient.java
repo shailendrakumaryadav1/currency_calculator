@@ -1,4 +1,4 @@
-package api;
+package currency.mastercard.api;
 
 import java.util.List;
 

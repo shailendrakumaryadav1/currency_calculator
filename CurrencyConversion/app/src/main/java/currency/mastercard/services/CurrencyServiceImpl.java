@@ -2,7 +2,7 @@ package currency.mastercard.services;
 
 import java.util.List;
 
-import api.APIClient;
+import currency.mastercard.api.APIClient;
 import currency.mastercard.modals.Currency;
 import currency.mastercard.modals.Exchange;
 

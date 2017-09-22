@@ -1,4 +1,4 @@
-package api;
+package currency.mastercard.api;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import retrofit.http.Query;
 
 public interface APIMethods {
 
-	@GET("/api/currency")
+	@GET("/currency/mastercard/api/currency")
 	List<Currency> getCurrencies();
 
-	@GET("/api/exchange")
+	@GET("/currency/mastercard/api/exchange")
 	Exchange getExchangeResponse(@Query("baseCode") String baseCode,
 			@Query("targetCode") String targetCode);
 
