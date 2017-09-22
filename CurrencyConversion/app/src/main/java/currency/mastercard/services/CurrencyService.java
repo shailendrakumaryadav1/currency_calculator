@@ -16,4 +16,6 @@ public interface CurrencyService {
 
 	public Exchange getExchangeRate(Currency base, Currency target);
 
+	public String getCurrencyFlagUrl(Currency currency);
+
 }

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by SKY on 9/22/2017.
  */
@@ -16,6 +19,11 @@ public class ThisApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		Picasso.Builder builder = new Picasso.Builder(this);
+		builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
+		Picasso built = builder.build();
+		Picasso.setSingletonInstance(built);
 
 		instance = this;
 	}

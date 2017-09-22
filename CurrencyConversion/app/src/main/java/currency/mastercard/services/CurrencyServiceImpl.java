@@ -1,5 +1,10 @@
 package currency.mastercard.services;
 
+import android.net.Uri;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import currency.mastercard.api.APIClient;
@@ -14,13 +19,11 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 	private static CurrencyService currencyService = null;
 
-	private CurrencyServiceImpl()
-	{
+	private CurrencyServiceImpl() {
 	}
 
-	public static CurrencyService getCurrencyService()
-	{
-		if(currencyService == null)
+	public static CurrencyService getCurrencyService() {
+		if (currencyService == null)
 			currencyService = new CurrencyServiceImpl();
 		return currencyService;
 	}
@@ -30,7 +33,11 @@ public class CurrencyServiceImpl implements CurrencyService {
 	}
 
 	public Exchange getExchangeRate(Currency base, Currency target) {
-		return APIClient.getInstance().getExchange(base,target);
+		return APIClient.getInstance().getExchange(base, target);
+	}
+
+	public String getCurrencyFlagUrl(Currency currency) {
+		return APIClient.BASE_URL + currency.getFlagPath();
 	}
 
 }

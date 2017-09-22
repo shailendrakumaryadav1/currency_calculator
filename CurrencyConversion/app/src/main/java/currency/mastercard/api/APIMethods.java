@@ -1,5 +1,7 @@
 package currency.mastercard.api;
 
+import android.media.Image;
+
 import java.util.List;
 
 import currency.mastercard.modals.Currency;
@@ -19,5 +21,6 @@ public interface APIMethods {
 	@GET("/api/exchange")
 	Exchange getExchangeResponse(@Query("baseCode") String baseCode,
 			@Query("targetCode") String targetCode);
+
 
 }

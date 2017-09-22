@@ -1,5 +1,6 @@
 package currency.mastercard.ui;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.currency.currencyconversion.R;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.Date;
 import java.util.List;
@@ -64,7 +68,7 @@ public class CurrencyActivity extends AppCompatActivity {
 	@Bind(R.id.default_currency_card_text)
 	TextView defaultCurrencyCardText;
 
-	private Currency base;
+	private Currency source;
 	private Currency target;
 	private Exchange exchange;
 	private State state;
@@ -82,7 +86,7 @@ public class CurrencyActivity extends AppCompatActivity {
 	}
 
 	public void initValues() {
-		base = null;
+		source = null;
 		target = null;
 		exchange = null;
 		state = null;
@@ -114,8 +118,7 @@ public class CurrencyActivity extends AppCompatActivity {
 	}
 
 	@OnClick(R.id.default_currency_card)
-	public void refresh()
-	{
+	public void refresh() {
 		createView();
 	}
 
@@ -127,12 +130,12 @@ public class CurrencyActivity extends AppCompatActivity {
 		protected String doInBackground(String... params) {
 			try {
 				CurrencyService currencyService = CurrencyServiceImpl.getCurrencyService();
-				if (base == null || target == null) {
+				if (source == null || target == null) {
 
 					List<Currency> currencies = currencyService.getAllCurrencies();
 					chooseBaseAndTarget(currencies);
 				}
-				exchange = currencyService.getExchangeRate(base, target);
+				exchange = currencyService.getExchangeRate(source, target);
 				state = State.SUCCESS;
 				resp = "SUCCESS";
 			} catch (Exception e) {
@@ -180,7 +183,7 @@ public class CurrencyActivity extends AppCompatActivity {
 	}
 
 	public void chooseBaseAndTarget(List<Currency> currencies) {
-		base = currencies.get((int) (new Date().getTime() % currencies.size()));
+		source = currencies.get((int) (new Date().getTime() % currencies.size()));
 		target = currencies.get((int) ((new Date().getTime() + 1) % currencies.size()));
 	}
 
@@ -201,15 +204,39 @@ public class CurrencyActivity extends AppCompatActivity {
 	}
 
 	public void fillCurrencyView() {
+		fillSourceCard();
+		fillTargetCard();
+		displayCurrencyCard(true);
 
 	}
 
-	public void fillLoadingView()
-	{
+	public void fillLoadingView() {
 		defaultCurrencyCardProgress.setVisibility(View.VISIBLE);
 		defaultCurrencyCardText.setText(R.string.text_loading);
 		defaultCurrencyCardImage.setVisibility(View.GONE);
 		displayCurrencyCard(false);
+	}
+
+	public void fillSourceCard() {
+		sourceCurrencyCode.setText(source.getCode());
+		fillFlag(source,sourceCurrencyFlag);
+	}
+
+	public void fillTargetCard() {
+		targetCurrencyCode.setText(target.getCode());
+		fillFlag(target,targetCurrencyFlag);
+
+	}
+
+	public void fillFlag(Currency currency, ImageView imageView) {
+
+		Transformation transformation =
+				new RoundedTransformationBuilder().borderColor(Color.BLACK).borderWidthDp(1)
+						.cornerRadiusDp(20).oval(false).build();
+
+		Picasso.with(this).load(CurrencyServiceImpl.getCurrencyService().getCurrencyFlagUrl(currency))
+				.error(R.mipmap.ic_error).fit().transform(transformation).into(imageView);
+
 	}
 
 }
