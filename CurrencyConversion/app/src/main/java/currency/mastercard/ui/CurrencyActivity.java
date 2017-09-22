@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +20,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import currency.mastercard.ThisApplication;
 import currency.mastercard.modals.Currency;
 import currency.mastercard.modals.Exchange;
+import currency.mastercard.modals.State;
 import currency.mastercard.services.CurrencyService;
 import currency.mastercard.services.CurrencyServiceImpl;
 
@@ -54,11 +57,17 @@ public class CurrencyActivity extends AppCompatActivity {
 
 	@Bind(R.id.default_currency_card)
 	CardView defaultCurrencyCard;
+	@Bind(R.id.default_currency_card_image)
+	ImageView defaultCurrencyCardImage;
+	@Bind(R.id.default_currency_card_progress)
+	ProgressBar defaultCurrencyCardProgress;
+	@Bind(R.id.default_currency_card_text)
+	TextView defaultCurrencyCardText;
 
 	private Currency base;
 	private Currency target;
 	private Exchange exchange;
-
+	private State state;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,22 +81,21 @@ public class CurrencyActivity extends AppCompatActivity {
 
 	}
 
-	public void initValues()
-	{
+	public void initValues() {
 		base = null;
 		target = null;
 		exchange = null;
+		state = null;
 	}
 
-	public void createView()
-	{
-		displayCard(false);
+	public void createView() {
+		fillLoadingView();
 
 		AsyncTaskRunner runner = new AsyncTaskRunner();
 		runner.execute();
 	}
 
-	public void displayCard(boolean isVisible) {
+	public void displayCurrencyCard(boolean isVisible) {
 		if (isVisible) {
 			baseCurrencyCard.setVisibility(View.VISIBLE);
 			targetCurrencyCard.setVisibility(View.VISIBLE);
@@ -105,25 +113,39 @@ public class CurrencyActivity extends AppCompatActivity {
 		runner.execute();
 	}
 
+	@OnClick(R.id.default_currency_card)
+	public void refresh()
+	{
+		createView();
+	}
+
 	private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
-		private String resp = "ABCD";
+		private String resp = "";
 
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				CurrencyService currencyService= CurrencyServiceImpl.getCurrencyService();
-				if(base == null || target == null)
-				{
+				CurrencyService currencyService = CurrencyServiceImpl.getCurrencyService();
+				if (base == null || target == null) {
 
 					List<Currency> currencies = currencyService.getAllCurrencies();
 					chooseBaseAndTarget(currencies);
 				}
-				exchange = currencyService.getExchangeRate(base,target);
+				exchange = currencyService.getExchangeRate(base, target);
+				state = State.SUCCESS;
+				resp = "SUCCESS";
 			} catch (Exception e) {
+
+				if (!ThisApplication.isConectedToInternet()) {
+					state = State.NO_INTERNET;
+					resp = "NO INTERNET";
+				} else {
+					state = State.ERROR;
+					resp = "ERROR - SERVER";
+				}
 				System.out.println("GROSS ERROR");
 				e.printStackTrace();
-
 			}
 			return resp;
 		}
@@ -131,7 +153,20 @@ public class CurrencyActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(String result) {
 			// execution of result of Long time consuming operation
-			Toast.makeText(CurrencyActivity.this, resp, Toast.LENGTH_SHORT).show();
+
+			switch (state) {
+				case SUCCESS:
+					fillCurrencyView();
+					break;
+				case ERROR:
+					fillErrorView();
+					break;
+				case NO_INTERNET:
+					fillNoInternetView();
+					break;
+			}
+
+			Toast.makeText(CurrencyActivity.this, result, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -144,10 +179,37 @@ public class CurrencyActivity extends AppCompatActivity {
 		}
 	}
 
-	public void chooseBaseAndTarget(List<Currency> currencies)
+	public void chooseBaseAndTarget(List<Currency> currencies) {
+		base = currencies.get((int) (new Date().getTime() % currencies.size()));
+		target = currencies.get((int) ((new Date().getTime() + 1) % currencies.size()));
+	}
+
+	public void fillNoInternetView() {
+		defaultCurrencyCardProgress.setVisibility(View.GONE);
+		defaultCurrencyCardImage.setImageResource(R.mipmap.ic_no_internet);
+		defaultCurrencyCardText.setText(R.string.text_no_connection);
+		defaultCurrencyCardImage.setVisibility(View.VISIBLE);
+		displayCurrencyCard(false);
+	}
+
+	public void fillErrorView() {
+		defaultCurrencyCardProgress.setVisibility(View.GONE);
+		defaultCurrencyCardImage.setImageResource(R.mipmap.ic_error);
+		defaultCurrencyCardText.setText(R.string.text_something_went_wrong);
+		defaultCurrencyCardImage.setVisibility(View.VISIBLE);
+		displayCurrencyCard(false);
+	}
+
+	public void fillCurrencyView() {
+
+	}
+
+	public void fillLoadingView()
 	{
-		base = currencies.get((int)(new Date().getTime() % currencies.size()));
-		target = currencies.get((int)((new Date().getTime() + 1) % currencies.size()));
+		defaultCurrencyCardProgress.setVisibility(View.VISIBLE);
+		defaultCurrencyCardText.setText(R.string.text_loading);
+		defaultCurrencyCardImage.setVisibility(View.GONE);
+		displayCurrencyCard(false);
 	}
 
 }

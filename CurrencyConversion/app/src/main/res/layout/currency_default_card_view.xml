@@ -15,21 +15,24 @@
 			android:padding="@dimen/dimen_15">
 
 		<ImageView
+				android:id="@+id/default_currency_card_image"
 				android:visibility="gone"
 				android:layout_width="@dimen/flag_width"
 				android:layout_height="@dimen/flag_width"
 				android:layout_margin="@dimen/dimen_5"
 				android:layout_centerVertical="true"
-				android:src="@mipmap/no_internet"
+				android:src="@mipmap/ic_no_internet"
 				android:contentDescription="@null" />
 
 		<ProgressBar
+				android:id="@+id/default_currency_card_progress"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_centerVertical="true"
 				android:indeterminate="true" />
 
 		<TextView
+				android:id="@+id/default_currency_card_text"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				style="@style/text_dark_gray"
