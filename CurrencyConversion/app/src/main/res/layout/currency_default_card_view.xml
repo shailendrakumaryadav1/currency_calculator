@@ -21,7 +21,7 @@
 				android:layout_margin="@dimen/dimen_5"
 				android:layout_centerVertical="true"
 				android:src="@mipmap/no_internet"
-				android:contentDescription="@null"/>
+				android:contentDescription="@null" />
 
 		<ProgressBar
 				android:layout_width="wrap_content"
