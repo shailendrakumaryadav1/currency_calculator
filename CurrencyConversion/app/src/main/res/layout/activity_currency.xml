@@ -6,9 +6,11 @@
 		android:padding="@dimen/currency_cardview_padding"
 		android:layout_marginTop="@dimen/dimen_3">
 
-	<include layout="@layout/currency_source_card_view"/>
+	<include layout="@layout/currency_source_card_view" />
 
-	<include layout="@layout/currency_target_card_view"/>
+	<include layout="@layout/currency_target_card_view" />
+
+	<include layout="@layout/currency_default_card_view" />
 
 
 </LinearLayout>
