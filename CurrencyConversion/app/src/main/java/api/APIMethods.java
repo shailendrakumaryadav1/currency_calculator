@@ -2,8 +2,8 @@ package api;
 
 import java.util.List;
 
-import modals.Currency;
-import modals.Exchange;
+import currency.mastercard.modals.Currency;
+import currency.mastercard.modals.Exchange;
 import retrofit.http.GET;
 import retrofit.http.Query;
 

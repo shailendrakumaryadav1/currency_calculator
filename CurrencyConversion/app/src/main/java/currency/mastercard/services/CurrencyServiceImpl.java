@@ -1,10 +1,10 @@
-package services;
+package currency.mastercard.services;
 
 import java.util.List;
 
 import api.APIClient;
-import modals.Currency;
-import modals.Exchange;
+import currency.mastercard.modals.Currency;
+import currency.mastercard.modals.Exchange;
 
 /**
  * Created by SKY on 9/21/2017.

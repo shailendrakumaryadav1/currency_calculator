@@ -1,4 +1,4 @@
-package modals;
+package currency.mastercard.modals;
 
 /**
  * Created by SKY on 9/21/2017.

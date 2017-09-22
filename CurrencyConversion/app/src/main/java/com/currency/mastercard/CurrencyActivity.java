@@ -1,6 +1,5 @@
-package com.currency.currencyconversion;
+package com.currency.mastercard;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,16 +11,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.currency.currencyconversion.R;
+
 import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import modals.Currency;
-import modals.Exchange;
-import services.CurrencyService;
-import services.CurrencyServiceImpl;
+import currency.mastercard.modals.Currency;
+import currency.mastercard.modals.Exchange;
+import currency.mastercard.services.CurrencyService;
+import currency.mastercard.services.CurrencyServiceImpl;
 
 public class CurrencyActivity extends AppCompatActivity {
 
@@ -122,8 +123,6 @@ public class CurrencyActivity extends AppCompatActivity {
 			} catch (Exception e) {
 				System.out.println("GROSS ERROR");
 				e.printStackTrace();
-
-
 
 			}
 			return resp;
