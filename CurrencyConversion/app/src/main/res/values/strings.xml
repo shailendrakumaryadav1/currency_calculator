@@ -6,4 +6,7 @@
 	<string name="text_currency_placeholder">1000.00</string>
 
 	<string name="text_i_want">I want</string>
+	<string name="text_no_connection">No Connection</string>
+	<string name="text_loading">Loading…</string>
+
 </resources>
