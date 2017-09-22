@@ -88,7 +88,6 @@
 				android:maxLength="@integer/max_amount_length"
 				android:maxEms="@integer/max_amount_length"
 				android:maxLines="@integer/max_amount_lines"
-				android:text="@string/text_currency_placeholder"
 				android:hint="@string/text_currency_placeholder"
 				android:textSize="@dimen/text_currency_value"
 				android:inputType="numberDecimal"

@@ -2,8 +2,8 @@ package currency.mastercard.ui;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.EditText;
@@ -32,6 +32,9 @@ import currency.mastercard.services.CurrencyService;
 import currency.mastercard.services.CurrencyServiceImpl;
 
 public class CurrencyActivity extends AppCompatActivity {
+
+	private static final int UNIT = 1;
+	private static final double DEFAULT_VALUE = 1000.0;
 
 	@Bind(R.id.base_currency_card)
 	CardView baseCurrencyCard;
@@ -71,7 +74,10 @@ public class CurrencyActivity extends AppCompatActivity {
 	private Currency source;
 	private Currency target;
 	private Exchange exchange;
+	private Exchange reverseExchange;
 	private State state;
+	private Double sourceValue;
+	private Double targetValue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +95,10 @@ public class CurrencyActivity extends AppCompatActivity {
 		source = null;
 		target = null;
 		exchange = null;
+		reverseExchange = null;
 		state = null;
+		sourceValue = null;
+		targetValue = null;
 	}
 
 	public void createView() {
@@ -122,6 +131,16 @@ public class CurrencyActivity extends AppCompatActivity {
 		createView();
 	}
 
+	@OnClick(R.id.src_currency_linear_layout)
+	public void clickSourceCurrencyChange() {
+
+	}
+
+	@OnClick(R.id.target_currency_linear_layout)
+	public void clickTargetCurrencyChange() {
+
+	}
+
 	private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
 		private String resp = "";
@@ -133,9 +152,13 @@ public class CurrencyActivity extends AppCompatActivity {
 				if (source == null || target == null) {
 
 					List<Currency> currencies = currencyService.getAllCurrencies();
-					chooseBaseAndTarget(currencies);
+					chooseBaseAndTargetCurrency(currencies);
 				}
 				exchange = currencyService.getExchangeRate(source, target);
+				reverseExchange = currencyService.getExchangeRate(target, source);
+				if (sourceValue == null || targetValue == null) {
+					chooseBaseAndTargetCurrencyValue();
+				}
 				state = State.SUCCESS;
 				resp = "SUCCESS";
 			} catch (Exception e) {
@@ -182,9 +205,16 @@ public class CurrencyActivity extends AppCompatActivity {
 		}
 	}
 
-	public void chooseBaseAndTarget(List<Currency> currencies) {
+	public void chooseBaseAndTargetCurrency(List<Currency> currencies) {
 		source = currencies.get((int) (new Date().getTime() % currencies.size()));
 		target = currencies.get((int) ((new Date().getTime() + 1) % currencies.size()));
+
+	}
+
+	public void chooseBaseAndTargetCurrencyValue() {
+		sourceValue = DEFAULT_VALUE;
+		targetValue = exchange.getValue(sourceValue);
+
 	}
 
 	public void fillNoInternetView() {
@@ -219,12 +249,27 @@ public class CurrencyActivity extends AppCompatActivity {
 
 	public void fillSourceCard() {
 		sourceCurrencyCode.setText(source.getCode());
-		fillFlag(source,sourceCurrencyFlag);
+		fillFlag(source, sourceCurrencyFlag);
+
+		currencyEquivalentSourceTv.setText(
+				String.format(getString(R.string.text_currency_equivalent), UNIT, source.getCode(),
+						exchange.getValue(UNIT), target.getCode()));
+
+		sourceCurrencyValue
+				.setText(String.format(getString(R.string.text_currency_format), sourceValue));
+		
 	}
 
 	public void fillTargetCard() {
 		targetCurrencyCode.setText(target.getCode());
-		fillFlag(target,targetCurrencyFlag);
+		fillFlag(target, targetCurrencyFlag);
+
+		currencyEquivalentTargetTv.setText(
+				String.format(getString(R.string.text_currency_equivalent), UNIT, target.getCode(),
+						reverseExchange.getValue(UNIT), source.getCode()));
+
+		targetCurrencyValue
+				.setText(String.format(getString(R.string.text_currency_format), targetValue));
 
 	}
 
@@ -232,9 +277,10 @@ public class CurrencyActivity extends AppCompatActivity {
 
 		Transformation transformation =
 				new RoundedTransformationBuilder().borderColor(Color.BLACK).borderWidthDp(1)
-						.cornerRadiusDp(20).oval(false).build();
+						.cornerRadiusDp(R.integer.flag_radius).oval(false).build();
 
-		Picasso.with(this).load(CurrencyServiceImpl.getCurrencyService().getCurrencyFlagUrl(currency))
+		Picasso.with(this)
+				.load(CurrencyServiceImpl.getCurrencyService().getCurrencyFlagUrl(currency))
 				.error(R.mipmap.ic_error).fit().transform(transformation).into(imageView);
 
 	}

@@ -1,7 +1,8 @@
 <resources>
 	<string name="app_name">Currency Conversion</string>
 	<string name="text_i_have">I have</string>
-	<string name="text_currency_equivalent">%1$d %2$s = %3$d %4$s</string>
+	<string name="text_currency_equivalent">%1$d %2$s = %3$f %4$s</string>
+	<string name="text_currency_format">%1$.2f</string>
 	<string name="text_drop_down_arrow">∨</string>
 	<string name="text_currency_placeholder">1000.00</string>
 

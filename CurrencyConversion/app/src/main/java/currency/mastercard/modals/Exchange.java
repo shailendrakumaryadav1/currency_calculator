@@ -40,6 +40,11 @@ public class Exchange {
 		this.rate = rate;
 	}
 
+	public double getValue(double baseValue)
+	{
+		return baseValue * rate;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
