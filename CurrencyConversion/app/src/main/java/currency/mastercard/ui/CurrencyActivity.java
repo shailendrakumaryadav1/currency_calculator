@@ -1,4 +1,4 @@
-package com.currency.mastercard;
+package currency.mastercard.ui;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;

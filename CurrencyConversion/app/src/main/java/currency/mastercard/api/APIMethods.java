@@ -13,10 +13,10 @@ import retrofit.http.Query;
 
 public interface APIMethods {
 
-	@GET("/currency/mastercard/api/currency")
+	@GET("/api/currency")
 	List<Currency> getCurrencies();
 
-	@GET("/currency/mastercard/api/exchange")
+	@GET("/api/exchange")
 	Exchange getExchangeResponse(@Query("baseCode") String baseCode,
 			@Query("targetCode") String targetCode);
 
