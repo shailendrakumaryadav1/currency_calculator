@@ -3,4 +3,5 @@
 	<integer name="max_amount_length">12</integer>
 	<integer name="max_amount_lines">1</integer>
 	<integer name="flag_radius">20</integer>
+	<integer name="max_search_text_length">30</integer>
 </resources>
