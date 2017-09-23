@@ -8,6 +8,10 @@ import android.net.NetworkInfo;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import currency.mastercard.modals.Currency;
+
 /**
  * Created by SKY on 9/22/2017.
  */
@@ -15,6 +19,7 @@ import com.squareup.picasso.Picasso;
 public class ThisApplication extends Application {
 
 	static ThisApplication instance;
+	static List<Currency> currencyList;
 
 	@Override
 	public void onCreate() {
@@ -34,6 +39,16 @@ public class ThisApplication extends Application {
 
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+	}
+
+	public static void setCurrencyList(List<Currency> currencyList)
+	{
+		ThisApplication.currencyList = currencyList;
+	}
+
+	public static List<Currency> getCurrencyList()
+	{
+		return currencyList;
 	}
 
 }
