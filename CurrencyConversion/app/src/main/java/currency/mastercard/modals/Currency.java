@@ -12,6 +12,8 @@ public class Currency {
 	private String flagPath;
 	private double rate;
 
+	private static final String FULL_NAME_FORMAT = "%s - %s";
+
 	public Currency(String code, String country, String name, String flagPath, double rate) {
 		this.code = code;
 		this.country = country;
@@ -58,6 +60,10 @@ public class Currency {
 
 	public void setRate(double rate) {
 		this.rate = rate;
+	}
+
+	public String getFullName() {
+		return String.format(FULL_NAME_FORMAT, code, name);
 	}
 
 	@Override
