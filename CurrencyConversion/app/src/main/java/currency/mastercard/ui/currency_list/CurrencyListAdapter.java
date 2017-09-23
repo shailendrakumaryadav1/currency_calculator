@@ -1,6 +1,8 @@
 package currency.mastercard.ui.currency_list;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.currency.currencyconversion.R;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
@@ -21,6 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import currency.mastercard.modals.Currency;
 import currency.mastercard.services.CurrencyServiceImpl;
+import currency.mastercard.ui.CurrencySelectionActivity;
 
 /**
  * Created by SKY on 9/23/2017.
@@ -51,7 +55,7 @@ public class CurrencyListAdapter
 	}
 
 	@Override
-	public void onBindViewHolder(CurrencySelectionViewHolder currencySelectionViewHolder, int i) {
+	public void onBindViewHolder(CurrencySelectionViewHolder currencySelectionViewHolder, final int i) {
 		currencySelectionViewHolder.currencySelectionLongName
 				.setText(currencies.get(i).getFullName());
 
@@ -62,6 +66,22 @@ public class CurrencyListAdapter
 		Picasso.with(context).load(CurrencyServiceImpl.getCurrencyService()
 				.getCurrencyFlagUrl(currencies.get(i))).error(R.mipmap.ic_error).fit()
 				.transform(transformation).into(currencySelectionViewHolder.currencySelectionFlag);
+
+
+		currencySelectionViewHolder.currencySelectionCard.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("Click made");
+				Toast.makeText(context, "Index position is: "+i, Toast.LENGTH_SHORT).show();
+				//currencies.get(i);
+				Intent returnIntent = new Intent();
+				//returnIntent.putExtra("result","reslt");
+				((CurrencySelectionActivity)context).setResult(Activity.RESULT_OK,returnIntent);
+
+				((CurrencySelectionActivity)context).finish();
+
+			}
+		});
 
 	}
 
