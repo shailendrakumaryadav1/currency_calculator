@@ -71,14 +71,14 @@ public class CurrencyListAdapter
 		currencySelectionViewHolder.currencySelectionCard.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				System.out.println("Click made");
-				Toast.makeText(context, "Index position is: "+i, Toast.LENGTH_SHORT).show();
-				//currencies.get(i);
 				Intent returnIntent = new Intent();
-				//returnIntent.putExtra("result","reslt");
+				returnIntent.putExtra(CurrencySelectionActivity.SELECTED_CURRENCY_KEY, currencies.get(i));
 				((CurrencySelectionActivity)context).setResult(Activity.RESULT_OK,returnIntent);
 
 				((CurrencySelectionActivity)context).finish();
+
+
+
 
 			}
 		});
