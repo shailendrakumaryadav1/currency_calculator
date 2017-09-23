@@ -4,7 +4,8 @@
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:padding="@dimen/currency_cardview_padding"
-		android:layout_marginTop="@dimen/dimen_3">
+		android:layout_marginTop="@dimen/dimen_10"
+		android:layout_marginBottom="@dimen/dimen_10">
 
 	<include layout="@layout/currency_source_card_view" />
 

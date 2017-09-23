@@ -41,7 +41,7 @@
 				android:layout_marginRight="@dimen/dimen_15"
 				android:layout_marginEnd="@dimen/dimen_15"
 				android:contentDescription="@null" />
-		
+
 
 	</RelativeLayout>
 
