@@ -1,10 +1,14 @@
 package currency.mastercard.modals;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by SKY on 9/21/2017.
  */
 
-public class Currency {
+public class Currency implements Serializable {
 
 	private String code;
 	private String country;
@@ -64,6 +68,15 @@ public class Currency {
 
 	public String getFullName() {
 		return String.format(FULL_NAME_FORMAT, code, name);
+	}
+
+	public boolean matches(String pattern) {
+		boolean matches = false;
+		pattern = pattern.toLowerCase();
+		if (code.toLowerCase().contains(pattern) || name.toLowerCase().contains(pattern) || country
+				.toLowerCase().contains(pattern))
+			matches = true;
+		return matches;
 	}
 
 	@Override
