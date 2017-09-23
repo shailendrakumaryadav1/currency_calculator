@@ -4,6 +4,7 @@
 	<string name="text_currency_equivalent">%1$d %2$s = %3$f %4$s</string>
 	<string name="text_currency_format">%1$.2f</string>
 	<string name="text_drop_down_arrow">∨</string>
+	<string name="text_arrow_right">〉</string>
 	<string name="text_currency_placeholder">1000.00</string>
 
 	<string name="text_i_want">I want</string>
