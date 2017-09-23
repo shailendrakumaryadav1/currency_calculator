@@ -2,9 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/dimen_10"
 		android:orientation="vertical"
-		android:padding="@dimen/currency_cardview_padding"
-		android:layout_marginTop="@dimen/dimen_3">
+		android:focusableInTouchMode="true">
+
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/dimen_50"
+			android:background="@color/colorCurrencySearchBar"
+			android:layout_marginBottom="@dimen/dimen_3"
+			android:orientation="horizontal">
+
+		<EditText
+				android:id="@+id/currency_search_text"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:background="@android:color/transparent"
+				android:hint="@string/text_currency_search_placeholder"
+				android:inputType="text"
+				android:maxLines="@integer/max_amount_lines"
+				android:ellipsize="end"
+				android:maxWidth="@dimen/dimen_300"
+				android:maxLength="@integer/max_search_text_length"
+				android:textColor="@color/colorCurrencySearchText"
+				android:textColorHint="@color/colorCurrencySearchText"
+				android:layout_marginLeft="@dimen/dimen_20"
+				android:layout_marginStart="@dimen/dimen_20"
+				android:gravity="center_vertical" />
+
+		<ImageButton
+				android:id="@+id/currency_search_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@android:drawable/ic_menu_search"
+				android:layout_centerVertical="true"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:layout_marginRight="@dimen/dimen_15"
+				android:layout_marginEnd="@dimen/dimen_15"
+				android:contentDescription="@null" />
+		
+
+	</RelativeLayout>
 
 	<android.support.v7.widget.RecyclerView
 			android:layout_width="match_parent"
