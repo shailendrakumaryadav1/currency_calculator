@@ -6,6 +6,10 @@
 		android:layout_height="wrap_content"
 		app:cardElevation="@dimen/currency_cardview_elevation"
 		app:cardCornerRadius="@dimen/currency_cardview_radius"
+		android:layout_marginTop="@dimen/dimen_3"
+		android:layout_marginBottom="@dimen/dimen_3"
+		android:layout_marginRight="@dimen/dimen_10"
+		android:layout_marginLeft="@dimen/dimen_10"
 		android:shape="ring"
 		android:thicknessRatio="@dimen/currency_cardview_thickness_ratio">
 
