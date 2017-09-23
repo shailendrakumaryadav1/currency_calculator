@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.currency.currencyconversion.R;
 
@@ -15,6 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import currency.mastercard.ThisApplication;
 import currency.mastercard.modals.Currency;
 import currency.mastercard.ui.currency_list.CurrencyListAdapter;
@@ -50,6 +50,12 @@ public class CurrencySelectionActivity extends AppCompatActivity {
 	@OnClick(R.id.currency_search_button)
 	public void onClickSearch() {
 		createView();
+	}
+
+	@OnTextChanged(R.id.currency_search_text)
+	public void onTextChange() {
+		if (currencySearchText.getText().toString().isEmpty())
+			createView();
 	}
 
 	public List<Currency> getMatchingCurrencies(String pattern) {
