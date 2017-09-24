@@ -35,7 +35,7 @@ import currency.mastercard.modals.State;
 import currency.mastercard.services.CurrencyService;
 import currency.mastercard.services.CurrencyServiceImpl;
 
-public class CurrencyActivity extends AppCompatActivity {
+public class CurrencyActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
 	private static final int UNIT = 1;
 	private static final double DEFAULT_VALUE = 1000.0;
@@ -109,6 +109,7 @@ public class CurrencyActivity extends AppCompatActivity {
 
 	public void createView() {
 		initActionBar();
+		initFocusChangeListeners();
 		fillLoadingView();
 		AsyncTaskRunner runner = new AsyncTaskRunner();
 		runner.execute();
@@ -290,9 +291,9 @@ public class CurrencyActivity extends AppCompatActivity {
 	}
 
 	public void fillFlag(Currency currency, ImageView imageView) {
-		Transformation transformation = new RoundedTransformationBuilder().borderColor(Color.BLACK)
-				.borderWidthDp(R.integer.flag_border_width).cornerRadiusDp(R.integer.flag_radius)
-				.oval(false).build();
+		Transformation transformation =
+				new RoundedTransformationBuilder().borderColor(Color.BLACK).borderWidthDp(1)
+						.cornerRadiusDp(R.integer.flag_radius).oval(false).build();
 		Picasso.with(this)
 				.load(CurrencyServiceImpl.getCurrencyService().getCurrencyFlagUrl(currency))
 				.error(R.mipmap.ic_error).fit().transform(transformation).into(imageView);
@@ -301,18 +302,16 @@ public class CurrencyActivity extends AppCompatActivity {
 	public void applyCurrencyValueChangeListener() {
 		sourceCurrencyValueWatcher = new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				targetCurrencyValue.removeTextChangedListener(targetCurrencyValueWatcher);
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int a, int b, int c) {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 				if (sourceCurrencyValue.getText().toString().length() == 0) {
 					sourceValue = null;
 					targetValue = null;
 					targetCurrencyValue.setText("");
-
 				} else {
 					sourceValue = Double.parseDouble(sourceCurrencyValue.getText().toString());
 					targetValue = exchange.getValue(sourceValue);
@@ -323,24 +322,21 @@ public class CurrencyActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void afterTextChanged(Editable arg0) {
-				targetCurrencyValue.addTextChangedListener(targetCurrencyValueWatcher);
+			public void afterTextChanged(Editable s) {
 			}
 		};
 
 		targetCurrencyValueWatcher = new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				sourceCurrencyValue.removeTextChangedListener(sourceCurrencyValueWatcher);
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int a, int b, int c) {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (targetCurrencyValue.getText().toString().length() == 0) {
 					targetValue = null;
 					sourceValue = null;
 					sourceCurrencyValue.setText("");
-
 				} else {
 					targetValue = Double.parseDouble(targetCurrencyValue.getText().toString());
 					sourceValue = reverseExchange.getValue(targetValue);
@@ -350,13 +346,31 @@ public class CurrencyActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void afterTextChanged(Editable arg0) {
-				sourceCurrencyValue.addTextChangedListener(sourceCurrencyValueWatcher);
+			public void afterTextChanged(Editable s) {
 			}
 		};
+	}
 
+	public void initFocusChangeListeners() {
+		sourceCurrencyValue.setOnFocusChangeListener(this);
+		targetCurrencyValue.setOnFocusChangeListener(this);
+	}
+
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+		if (v.equals(findViewById(R.id.src_currency_value))) {
+			if (hasFocus) {
 				sourceCurrencyValue.addTextChangedListener(sourceCurrencyValueWatcher);
+			} else {
+				sourceCurrencyValue.removeTextChangedListener(sourceCurrencyValueWatcher);
+			}
+		} else if (v.equals(findViewById(R.id.target_currency_value))) {
+			if (hasFocus) {
 				targetCurrencyValue.addTextChangedListener(targetCurrencyValueWatcher);
+			} else {
+				targetCurrencyValue.removeTextChangedListener(targetCurrencyValueWatcher);
+			}
+		}
 	}
 
 }

@@ -49,9 +49,7 @@ public class CurrencyListAdapter
 	public CurrencySelectionViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View v = LayoutInflater.from(viewGroup.getContext())
 				.inflate(R.layout.currency_selection_card_view, viewGroup, false);
-		CurrencySelectionViewHolder currencySelectionViewHolder =
-				new CurrencySelectionViewHolder(v);
-		return currencySelectionViewHolder;
+		return new CurrencySelectionViewHolder(v);
 	}
 
 	@Override
@@ -60,9 +58,9 @@ public class CurrencyListAdapter
 		currencySelectionViewHolder.currencySelectionLongName
 				.setText(currencies.get(i).getFullName());
 
-		Transformation transformation = new RoundedTransformationBuilder().borderColor(Color.BLACK)
-				.borderWidthDp(R.integer.flag_border_width).cornerRadiusDp(R.integer.flag_radius)
-				.oval(false).build();
+		Transformation transformation =
+				new RoundedTransformationBuilder().borderColor(Color.BLACK).borderWidthDp(1)
+						.cornerRadiusDp(R.integer.flag_radius).oval(false).build();
 
 		Picasso.with(context).load(CurrencyServiceImpl.getCurrencyService()
 				.getCurrencyFlagUrl(currencies.get(i))).error(R.mipmap.ic_error).fit()
