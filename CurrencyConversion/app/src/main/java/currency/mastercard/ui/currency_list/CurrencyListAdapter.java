@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.currency.currencyconversion.R;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
@@ -50,38 +49,39 @@ public class CurrencyListAdapter
 	public CurrencySelectionViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View v = LayoutInflater.from(viewGroup.getContext())
 				.inflate(R.layout.currency_selection_card_view, viewGroup, false);
-		CurrencySelectionViewHolder pvh = new CurrencySelectionViewHolder(v);
-		return pvh;
+		CurrencySelectionViewHolder currencySelectionViewHolder =
+				new CurrencySelectionViewHolder(v);
+		return currencySelectionViewHolder;
 	}
 
 	@Override
-	public void onBindViewHolder(CurrencySelectionViewHolder currencySelectionViewHolder, final int i) {
+	public void onBindViewHolder(CurrencySelectionViewHolder currencySelectionViewHolder,
+			final int i) {
 		currencySelectionViewHolder.currencySelectionLongName
 				.setText(currencies.get(i).getFullName());
 
-		Transformation transformation =
-				new RoundedTransformationBuilder().borderColor(Color.BLACK).borderWidthDp(1)
-						.cornerRadiusDp(R.integer.flag_radius).oval(false).build();
+		Transformation transformation = new RoundedTransformationBuilder().borderColor(Color.BLACK)
+				.borderWidthDp(R.integer.flag_border_width).cornerRadiusDp(R.integer.flag_radius)
+				.oval(false).build();
 
 		Picasso.with(context).load(CurrencyServiceImpl.getCurrencyService()
 				.getCurrencyFlagUrl(currencies.get(i))).error(R.mipmap.ic_error).fit()
 				.transform(transformation).into(currencySelectionViewHolder.currencySelectionFlag);
 
+		currencySelectionViewHolder.currencySelectionCard
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent returnIntent = new Intent();
+						returnIntent.putExtra(CurrencySelectionActivity.SELECTED_CURRENCY_KEY,
+								currencies.get(i));
+						((CurrencySelectionActivity) context)
+								.setResult(Activity.RESULT_OK, returnIntent);
 
-		currencySelectionViewHolder.currencySelectionCard.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent returnIntent = new Intent();
-				returnIntent.putExtra(CurrencySelectionActivity.SELECTED_CURRENCY_KEY, currencies.get(i));
-				((CurrencySelectionActivity)context).setResult(Activity.RESULT_OK,returnIntent);
+						((CurrencySelectionActivity) context).finish();
 
-				((CurrencySelectionActivity)context).finish();
-
-
-
-
-			}
-		});
+					}
+				});
 
 	}
 

@@ -1,9 +1,11 @@
 package currency.mastercard.ui;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.EditText;
 
 import com.currency.currencyconversion.R;
@@ -18,10 +20,6 @@ import butterknife.OnTextChanged;
 import currency.mastercard.ThisApplication;
 import currency.mastercard.modals.Currency;
 import currency.mastercard.ui.currency_list.CurrencyListAdapter;
-
-/**
- * Created by SKY on 9/23/2017.
- */
 
 public class CurrencySelectionActivity extends AppCompatActivity {
 
@@ -38,13 +36,15 @@ public class CurrencySelectionActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_currency_selection);
-
 		ButterKnife.bind(this);
-
 		init();
-
 		createView();
+	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		createView();
 	}
 
 	@OnClick(R.id.currency_search_button)
@@ -70,12 +70,31 @@ public class CurrencySelectionActivity extends AppCompatActivity {
 	}
 
 	public void createView() {
+		initActionBar();
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 		currencySelectionRv.setLayoutManager(linearLayoutManager);
 		CurrencyListAdapter currencyListAdapter = new CurrencyListAdapter(this,
 				getMatchingCurrencies(currencySearchText.getText().toString()));
 		currencySelectionRv.setAdapter(currencyListAdapter);
 
+	}
+
+	public void initActionBar() {
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+			getSupportActionBar().setCustomView(R.layout.action_bar_currency_selection_activity);
+			getSupportActionBar().getCustomView().findViewById(R.id.currency_selection_cancel)
+					.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							onClickCancel();
+						}
+					});
+		}
+	}
+
+	public void onClickCancel() {
+		onBackPressed();
 	}
 
 	public void init() {

@@ -1,5 +1,8 @@
 package currency.mastercard.ui;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.currency.currencyconversion.R;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
@@ -38,6 +40,8 @@ public class CurrencyActivity extends AppCompatActivity {
 	private static final int UNIT = 1;
 	private static final double DEFAULT_VALUE = 1000.0;
 	private static final double DEFAULT_VALUE_HINT = 1000.0;
+	private static final int SOURCE_CURRENCY_CHANGE_REQUEST_CODE = 1001;
+	private static final int TARGET_CURRENCY_CHANGE_REQUEST_CODE = 1002;
 
 	@Bind(R.id.base_currency_card)
 	CardView baseCurrencyCard;
@@ -89,11 +93,8 @@ public class CurrencyActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_currency);
 		ButterKnife.bind(this);
-
 		init();
-
 		createView();
-
 	}
 
 	public void init() {
@@ -107,10 +108,34 @@ public class CurrencyActivity extends AppCompatActivity {
 	}
 
 	public void createView() {
+		initActionBar();
 		fillLoadingView();
-
 		AsyncTaskRunner runner = new AsyncTaskRunner();
 		runner.execute();
+	}
+
+	@OnClick(R.id.src_currency_linear_layout)
+	public void changeSourceCurrency(View view) {
+		Intent intent = new Intent(this, CurrencySelectionActivity.class);
+		startActivityForResult(intent, SOURCE_CURRENCY_CHANGE_REQUEST_CODE);
+	}
+
+	@OnClick(R.id.target_currency_linear_layout)
+	public void changeTargetCurrency(View view) {
+		Intent intent = new Intent(this, CurrencySelectionActivity.class);
+		startActivityForResult(intent, TARGET_CURRENCY_CHANGE_REQUEST_CODE);
+	}
+
+	@OnClick(R.id.default_currency_card)
+	public void refresh() {
+		createView();
+	}
+
+	public void initActionBar() {
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+			getSupportActionBar().setCustomView(R.layout.action_bar_currency_activity);
+		}
 	}
 
 	public void displayCurrencyCards(boolean isVisible) {
@@ -125,25 +150,22 @@ public class CurrencyActivity extends AppCompatActivity {
 		}
 	}
 
-	@OnClick(R.id.src_currency_linear_layout)
-	public void submit(View view) {
-		AsyncTaskRunner runner = new AsyncTaskRunner();
-		runner.execute();
-	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-	@OnClick(R.id.default_currency_card)
-	public void refresh() {
-		createView();
-	}
-
-	@OnClick(R.id.src_currency_linear_layout)
-	public void clickSourceCurrencyChange() {
-
-	}
-
-	@OnClick(R.id.target_currency_linear_layout)
-	public void clickTargetCurrencyChange() {
-
+		if (resultCode == Activity.RESULT_OK) {
+			switch (requestCode) {
+				case SOURCE_CURRENCY_CHANGE_REQUEST_CODE:
+					source = (Currency) data.getExtras()
+							.getSerializable(CurrencySelectionActivity.SELECTED_CURRENCY_KEY);
+					break;
+				case TARGET_CURRENCY_CHANGE_REQUEST_CODE:
+					target = (Currency) data.getExtras()
+							.getSerializable(CurrencySelectionActivity.SELECTED_CURRENCY_KEY);
+					break;
+			}
+			createView();
+		}
 	}
 
 	private class AsyncTaskRunner extends AsyncTask<String, String, String> {
@@ -154,9 +176,9 @@ public class CurrencyActivity extends AppCompatActivity {
 		protected String doInBackground(String... params) {
 			try {
 				CurrencyService currencyService = CurrencyServiceImpl.getCurrencyService();
+				List<Currency> currencies = currencyService.getAllCurrencies();
+				ThisApplication.setCurrencyList(currencies);
 				if (source == null || target == null) {
-
-					List<Currency> currencies = currencyService.getAllCurrencies();
 					chooseBaseAndTargetCurrency(currencies);
 				}
 				exchange = currencyService.getExchangeRate(source, target);
@@ -165,19 +187,16 @@ public class CurrencyActivity extends AppCompatActivity {
 					chooseBaseAndTargetCurrencyValue();
 				}
 				state = State.SUCCESS;
-				resp = "SUCCESS";
 			} catch (Exception e) {
 
 				if (!ThisApplication.isConectedToInternet()) {
 					state = State.NO_INTERNET;
-					resp = "NO INTERNET";
 				} else {
 					state = State.ERROR;
-					resp = "ERROR - SERVER";
 				}
-				System.out.println("GROSS ERROR");
 				e.printStackTrace();
 			}
+			resp = state.toString();
 			return resp;
 		}
 
@@ -189,27 +208,21 @@ public class CurrencyActivity extends AppCompatActivity {
 					fillCurrencyView();
 					break;
 				case ERROR:
+					// in case any currency is removed from server.
+					source = null;
+					target = null;
 					fillErrorView();
 					break;
 				case NO_INTERNET:
 					fillNoInternetView();
 					break;
 			}
-
-			Toast.makeText(CurrencyActivity.this, result, Toast.LENGTH_SHORT).show();
 		}
 
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected void onProgressUpdate(String... text) {
-			Toast.makeText(CurrencyActivity.this, "Done", Toast.LENGTH_LONG).show();
-		}
 	}
 
 	public void chooseBaseAndTargetCurrency(List<Currency> currencies) {
+		// choose any two currencies to show to user for first time
 		source = currencies.get((int) (new Date().getTime() % currencies.size()));
 		target = currencies.get((int) ((new Date().getTime() + 1) % currencies.size()));
 
@@ -242,7 +255,6 @@ public class CurrencyActivity extends AppCompatActivity {
 		fillTargetCard();
 		applyCurrencyValueChangeListener();
 		displayCurrencyCards(true);
-
 	}
 
 	public void fillLoadingView() {
@@ -255,46 +267,35 @@ public class CurrencyActivity extends AppCompatActivity {
 	public void fillSourceCard() {
 		sourceCurrencyCode.setText(source.getCode());
 		fillFlag(source, sourceCurrencyFlag);
-
 		currencyEquivalentSourceTv.setText(
 				String.format(getString(R.string.text_currency_equivalent), UNIT, source.getCode(),
 						exchange.getValue(UNIT), target.getCode()));
-
 		sourceCurrencyValue
 				.setText(String.format(getString(R.string.text_currency_format), sourceValue));
 		sourceCurrencyValue.setHint(
 				String.format(getString(R.string.text_currency_format), DEFAULT_VALUE_HINT));
-
 	}
 
 	public void fillTargetCard() {
 		targetCurrencyCode.setText(target.getCode());
 		fillFlag(target, targetCurrencyFlag);
-
 		currencyEquivalentTargetTv.setText(
 				String.format(getString(R.string.text_currency_equivalent), UNIT, target.getCode(),
 						reverseExchange.getValue(UNIT), source.getCode()));
-
+		targetValue = exchange.getValue(sourceValue);
 		targetCurrencyValue
 				.setText(String.format(getString(R.string.text_currency_format), targetValue));
-
-		targetValue = exchange.getValue(sourceValue);
-
 		targetCurrencyValue.setHint(String.format(getString(R.string.text_currency_format),
 				exchange.getValue(DEFAULT_VALUE_HINT)));
-
 	}
 
 	public void fillFlag(Currency currency, ImageView imageView) {
-
-		Transformation transformation =
-				new RoundedTransformationBuilder().borderColor(Color.BLACK).borderWidthDp(1)
-						.cornerRadiusDp(R.integer.flag_radius).oval(false).build();
-
+		Transformation transformation = new RoundedTransformationBuilder().borderColor(Color.BLACK)
+				.borderWidthDp(R.integer.flag_border_width).cornerRadiusDp(R.integer.flag_radius)
+				.oval(false).build();
 		Picasso.with(this)
 				.load(CurrencyServiceImpl.getCurrencyService().getCurrencyFlagUrl(currency))
 				.error(R.mipmap.ic_error).fit().transform(transformation).into(imageView);
-
 	}
 
 	public void applyCurrencyValueChangeListener() {
@@ -354,8 +355,8 @@ public class CurrencyActivity extends AppCompatActivity {
 			}
 		};
 
-		sourceCurrencyValue.addTextChangedListener(sourceCurrencyValueWatcher);
-		targetCurrencyValue.addTextChangedListener(targetCurrencyValueWatcher);
+				sourceCurrencyValue.addTextChangedListener(sourceCurrencyValueWatcher);
+				targetCurrencyValue.addTextChangedListener(targetCurrencyValueWatcher);
 	}
 
 }

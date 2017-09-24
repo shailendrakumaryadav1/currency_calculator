@@ -26,7 +26,7 @@ public class ThisApplication extends Application {
 		super.onCreate();
 
 		Picasso.Builder builder = new Picasso.Builder(this);
-		builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
+		builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
 		Picasso built = builder.build();
 		Picasso.setSingletonInstance(built);
 
@@ -41,13 +41,11 @@ public class ThisApplication extends Application {
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 	}
 
-	public static void setCurrencyList(List<Currency> currencyList)
-	{
+	public static void setCurrencyList(List<Currency> currencyList) {
 		ThisApplication.currencyList = currencyList;
 	}
 
-	public static List<Currency> getCurrencyList()
-	{
+	public static List<Currency> getCurrencyList() {
 		return currencyList;
 	}
 
