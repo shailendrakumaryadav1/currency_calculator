@@ -9,7 +9,8 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme"
 			android:name="currency.mastercard.ThisApplication">
-		<activity android:name="currency.mastercard.ui.CurrencyActivity">
+		<activity android:name="currency.mastercard.ui.CurrencyActivity"
+				android:label="@string/text_currency_activity_title">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +18,8 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name="currency.mastercard.ui.CurrencySelectionActivity">
+		<activity android:name="currency.mastercard.ui.CurrencySelectionActivity"
+				android:label="@string/text_currency_selection_activity_title">
 			<!--Default Intent Filter-->
 			<intent-filter>
 				<action android:name="android.intent.action.DEFAULT" />
