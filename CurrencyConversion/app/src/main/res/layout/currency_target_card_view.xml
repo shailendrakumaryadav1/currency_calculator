@@ -74,8 +74,6 @@
 					android:layout_height="match_parent"
 					android:gravity="bottom"
 					android:paddingBottom="@dimen/dimen_5"
-					android:layout_marginStart="@dimen/dimen_5"
-					android:layout_marginLeft="@dimen/dimen_5"
 					android:text="@string/text_drop_down_arrow"
 					android:textStyle="bold"
 					style="@style/text_dark_gray"
