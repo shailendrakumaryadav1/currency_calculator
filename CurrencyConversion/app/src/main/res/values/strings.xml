@@ -11,5 +11,6 @@
 	<string name="text_no_connection">No Connection :O</string>
 	<string name="text_something_went_wrong">Something went wrong :(</string>
 	<string name="text_loading">Loading…</string>
-
+	<string name="text_currency_activity_title">Currency</string>
+	<string name="text_currency_selection_activity_title">Select Currency</string>
 </resources>
