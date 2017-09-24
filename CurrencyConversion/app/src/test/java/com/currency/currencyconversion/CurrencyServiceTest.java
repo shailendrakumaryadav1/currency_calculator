@@ -77,7 +77,6 @@ public class CurrencyServiceTest {
 
 	@Test(expected = Exception.class)
 	public void testGetExchangeInvalidCodeFails() {
-		//use the fake currency
 		mockService.getExchangeRate(USD, fakeCurrency);
 	}
 

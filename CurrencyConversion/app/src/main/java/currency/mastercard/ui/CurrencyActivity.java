@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +43,7 @@ public class CurrencyActivity extends AppCompatActivity implements View.OnFocusC
 	private static final double DEFAULT_VALUE_HINT = 1000.0;
 	private static final int SOURCE_CURRENCY_CHANGE_REQUEST_CODE = 1001;
 	private static final int TARGET_CURRENCY_CHANGE_REQUEST_CODE = 1002;
+	private static final String TAG = CurrencyActivity.class.getName();
 
 	@Bind(R.id.base_currency_card)
 	CardView baseCurrencyCard;
@@ -203,7 +205,7 @@ public class CurrencyActivity extends AppCompatActivity implements View.OnFocusC
 
 		@Override
 		protected void onPostExecute(String result) {
-
+			Log.d(TAG, result);
 			switch (state) {
 				case SUCCESS:
 					fillCurrencyView();

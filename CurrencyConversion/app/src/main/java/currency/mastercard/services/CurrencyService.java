@@ -11,11 +11,13 @@ import currency.mastercard.modals.Exchange;
 
 public interface CurrencyService {
 
+	// To get all currencies.
+	List<Currency> getAllCurrencies();
 
-	public List<Currency> getAllCurrencies();
+	// To get exchange between two currencies.
+	Exchange getExchangeRate(Currency base, Currency target);
 
-	public Exchange getExchangeRate(Currency base, Currency target);
-
-	public String getCurrencyFlagUrl(Currency currency);
+	// To get flag url for the currency.
+	String getCurrencyFlagUrl(Currency currency);
 
 }

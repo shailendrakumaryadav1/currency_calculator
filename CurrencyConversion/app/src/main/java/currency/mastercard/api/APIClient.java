@@ -13,6 +13,7 @@ import retrofit.RestAdapter;
 
 public class APIClient implements RequestInterceptor {
 
+	// Server URL - Update here.
 	public static final String BASE_URL = "http://192.168.1.66:8080";
 	private static APIMethods api;
 	private static APIClient instance;
@@ -40,13 +41,16 @@ public class APIClient implements RequestInterceptor {
 
 	@Override
 	public void intercept(RequestFacade request) {
+		//Query parameters can be added here, like API keys, if exist
 		//request.addQueryParam(APIClient.KEY_PARAM, APIClient.API_KEY);
 	}
 
+	// To get all currencies.
 	public List<Currency> getCurrencies() {
 		return getApi().getCurrencies();
 	}
 
+	// To get exchange between two currencies.
 	public Exchange getExchange(Currency base, Currency target) {
 		String baseCode = base.getCode();
 		String targetCode = target.getCode();

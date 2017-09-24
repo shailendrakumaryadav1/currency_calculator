@@ -1,7 +1,5 @@
 package currency.mastercard.modals;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**

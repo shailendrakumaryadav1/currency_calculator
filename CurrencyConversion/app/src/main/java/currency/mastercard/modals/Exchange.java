@@ -40,8 +40,7 @@ public class Exchange {
 		this.rate = rate;
 	}
 
-	public double getValue(double baseValue)
-	{
+	public double getValue(double baseValue) {
 		return baseValue * rate;
 	}
 

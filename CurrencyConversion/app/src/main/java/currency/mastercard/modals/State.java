@@ -5,5 +5,7 @@ package currency.mastercard.modals;
  */
 
 public enum State {
-	NO_INTERNET, ERROR, SUCCESS;
+	NO_INTERNET,
+	ERROR,
+	SUCCESS;
 }
