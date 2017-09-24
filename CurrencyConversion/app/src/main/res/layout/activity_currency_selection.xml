@@ -32,9 +32,9 @@
 
 		<ImageButton
 				android:id="@+id/currency_search_button"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:background="@android:drawable/ic_menu_search"
+				android:layout_width="@dimen/dimen_30"
+				android:layout_height="@dimen/dimen_30"
+				android:background="@mipmap/ic_search"
 				android:layout_centerVertical="true"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentEnd="true"
@@ -48,6 +48,7 @@
 	<android.support.v7.widget.RecyclerView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			android:padding="@dimen/currency_cardview_padding"
 			android:id="@+id/currency_selection_recycler_view" />
 
 </LinearLayout>
