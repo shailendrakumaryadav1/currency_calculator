@@ -11,6 +11,7 @@
 	<dimen name="text_currency_name">20sp</dimen>
 	<dimen name="text_currency_value">30sp</dimen>
 	<dimen name="text_drop_down_arrow">20sp</dimen>
+	<dimen name="text_activity_title">20sp</dimen>
 	<dimen name="dimen_2">2dp</dimen>
 	<dimen name="dimen_3">3dp</dimen>
 	<dimen name="dimen_5">5dp</dimen>
@@ -18,6 +19,8 @@
 	<dimen name="dimen_15">15dp</dimen>
 	<dimen name="dimen_18">18dp</dimen>
 	<dimen name="dimen_20">20dp</dimen>
+	<dimen name="dimen_25">25dp</dimen>
+	<dimen name="dimen_30">30dp</dimen>
 	<dimen name="dimen_50">50dp</dimen>
 	<dimen name="dimen_150">150dp</dimen>
 	<dimen name="dimen_300">300dp</dimen>
