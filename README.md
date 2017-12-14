@@ -19,3 +19,13 @@ The app is a currency calculator. The expected functionalities are as follows:
 **Reach out to me in case of any problem**
 Email : [skyadav0893@gmail.com](mailto:skyadav0893@gmail.com)
 Phone : +65-81525574
+
+
+
+
+### Screenshots
+
+![alt text](https://raw.githubusercontent.com/shailendrakumaryadav1/currency_calculator/master/CurrencyConversion/screenshots/pic_1.jpg)
+
+
+![alt text](https://raw.githubusercontent.com/shailendrakumaryadav1/currency_calculator/master/CurrencyConversion/screenshots/pic_2.jpg)
