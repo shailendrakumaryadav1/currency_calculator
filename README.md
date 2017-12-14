@@ -11,10 +11,8 @@ The app is a currency calculator. The expected functionalities are as follows:
 
 
 ### To use the application
-* Firstly, Run the server.
-* Secondly, Update server URL in APIClient class.
-* Lastly, Run app.
-
+* Clone the repository into your system
+* Install this android project into your device, and you are done!
 
 **Reach out to me in case of any problem**
 Email : [skyadav0893@gmail.com](mailto:skyadav0893@gmail.com)
