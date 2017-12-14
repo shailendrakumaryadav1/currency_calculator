@@ -14,7 +14,7 @@ import retrofit.RestAdapter;
 public class APIClient implements RequestInterceptor {
 
 	// Server URL - Update here.
-	public static final String BASE_URL = "http://192.168.1.66:8080";
+	public static final String BASE_URL = "https://currency-calculator-server.herokuapp.com";
 	private static APIMethods api;
 	private static APIClient instance;
 
